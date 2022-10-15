@@ -14,4 +14,5 @@ main.js是覈心程式.<br>
 "function changeTimeFormat" 不是我創建的, 版权未知。<br>
 如果你有更好的方法或建議，請告訴我! <br>
 
+# Sample Picture
 ![image](https://user-images.githubusercontent.com/56828391/195979641-dbe3283b-e94e-4ac9-a8cc-e6be59d799dd.png)
