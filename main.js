@@ -1,3 +1,5 @@
+// Js_LrcMusicPlayer (c) ORDYLAN  
+
 /*  
 <audio id="audio" src="#" controls loop="loop" autoplay="autoplay"></audio>
 <p id="lrcup1"></p>
