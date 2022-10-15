@@ -6,7 +6,7 @@ main.js is the core code.<br>
 And the "function changeTimeFormat" was not created by me.<br>
 If you have better methods or suggestions, please tell me!<br>
 
-# Js LrcMusicPlayer（中文）
+# Js LrcMusicPlayer (中文) 
 
 用於web版本的lrc音訊字幕播放機.<br>
 你可以去 https://ordylan.github.io/Js_LrcMusicPlayer/example.html 看。<br>
