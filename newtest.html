@@ -13,7 +13,7 @@
 </head>
 <body>
 <div id="mmm">
-<header><div id="backurll"><a href="javascript:void(0);" onclick="window.location.href = localStorage.ON_LastPath;"><img src="https://on.ordylan.cn/back.png" id="b" alt="back"></a></div><h1 id="oes">听音乐_橙鸭笔记系统<a href="/noteview/tags/1">[回首页]</a></h1></header>
+<header><div id="backurll"><a href="javascript:void(0);" onclick="window.location.href = localStorage.ON_LastPath;"><img src="https://on.ordylan.cn/back.png" id="b" alt="back"></a></div><h1 id="oes">听音乐_橙鸭笔记系统</h1></header>
 
 <div id="main" style="display: block;">  <style>
     .current-song {
@@ -33,19 +33,23 @@ pre#lrcup1,pre#lrcdown1,a#lrcup1,a#lrcdown1{
   <pre id="lrcup1"></pre>
   <pre id="lrc"></pre>
   <pre id="lrcdown1"></pre>
-  <fieldset><legend>音乐表</legend>
+  <fieldset><legend>音乐表</legend><div>[循环听歌: <input type="checkbox" id="loooop" onchange="if(document.getElementById('loooop').checked) {localStorage.ON_T_CI_loop='true';} else {localStorage.ON_T_CI_loop='false';}">]</div>
   <div id="playlist">
   </div></fieldset>
   <script>
     var currentIndex = 0;
+    if (localStorage.ON_T_CI_loop == 'true') {
+    document.getElementById('loooop').checked = true;
+}
   function playNextSong() {
+  if(localStorage.ON_T_CI_loop!="true"){
     const playlistItems = document.getElementsByClassName('playlist-item');
     currentIndex = (currentIndex + 1) % playlistItems.length;
     const nextSong = playlistItems[currentIndex];
-    nextSong.click();
+    nextSong.click();}
   }
     function tojson(lrcText) {
-      const lines = lrcText.split('\n');
+      const lines = lrcText.split('\\n');
       const lrc = [];
       lrc.push({ time:"-1", text:">ORDYLAN<-正在载入中!!" });
       for (let line of lines) {
@@ -63,9 +67,9 @@ pre#lrcup1,pre#lrcdown1,a#lrcup1,a#lrcdown1{
     }
     function showLyrics(lrc, currentTime) {
       const lrcElement = document.getElementById('lrc');
-      var ti = Number(localStorage.T_index) ;
+      var ti = Number(localStorage.ON_T_CI_index) ;
       if((ti+0)==lrc.length || currentTime >= (audio.duration-0.5)){
-          localStorage.T_index=0;
+          localStorage.ON_T_CI_index=0;
       playNextSong();
     }
      if(currentTime>lrc[ti].time){
@@ -75,10 +79,10 @@ pre#lrcup1,pre#lrcdown1,a#lrcup1,a#lrcdown1{
          console.log("lrc[ti].time:"+lrc[ti].time);
          console.log("lrc[ti+1].time:"+lrc[ti+1].time);
          console.log("延迟时间 :"+(currentTime-lrc[ti].time)*1000+"ms");
-              if((currentTime-lrc[ti].time)>localStorage.ON_T_CI_L){localStorage.ON_T_CI_L=(currentTime-lrc[ti].time);}
-if((currentTime-lrc[ti].time)<localStorage.ON_T_CI_S){localStorage.ON_T_CI_S=(currentTime-lrc[ti].time);}
-                  console.log("最长延迟时间 :"+localStorage.ON_T_CI_L+"ms");
-         console.log("最短延迟时间 :"+localStorage.ON_T_CI_S+"ms");
+              if((currentTime-lrc[ti].time)>localStorage.ON_T_CI_L&&ti>1){localStorage.ON_T_CI_L=(currentTime-lrc[ti].time);}
+if((currentTime-lrc[ti].time)<localStorage.ON_T_CI_S&&ti>1){localStorage.ON_T_CI_S=(currentTime-lrc[ti].time);}
+                  console.log("最长延迟时间 :"+(localStorage.ON_T_CI_L)*1000+"ms");
+         console.log("最短延迟时间 :"+(localStorage.ON_T_CI_S)*1000+"ms");
 
          if(/*ti<(lrc.length-1) && */currentTime > lrc[ti+1].time){
              
@@ -86,18 +90,18 @@ console.log("拖动条或多页面-执行for");
                   for (let i = 0; i < lrc.length; i++) {
         if ((i === lrc.length - 1 && currentTime > lrc[i].time) || (currentTime > lrc[i].time && currentTime < lrc[i+1].time)) {
           //lrcElement.innerHTML = lrc[i].text;
-          localStorage.T_index=i;
+          localStorage.ON_T_CI_index=i;
           break;
         }
          }
         //else if(Number(ti)==lrc.length){
-        //    lrcElement.innerHTML = lrc[ti].text;localStorage.T_index=0;
+        //    lrcElement.innerHTML = lrc[ti].text;localStorage.ON_T_CI_index=0;
          }
         else{
             lrcElement.innerHTML = lrc[ti].text;
             document.getElementById('lrcup1').innerHTML = lrc[ti-1].text;
             document.getElementById('lrcdown1').innerHTML = lrc[ti+1].text;
-        localStorage.T_index++;
+        localStorage.ON_T_CI_index++;
       }
 
         }
@@ -108,7 +112,7 @@ console.log("拖动条或多页面-执行for");
       for (let i = 0; i < lrc.length; i++) {
         if ((i === lrc.length - 1 && currentTime > lrc[i].time) || (currentTime > lrc[i].time && currentTime < lrc[i+1].time)) {
        //   lrcElement.innerHTML = lrc[i].text;
-          localStorage.T_index=i;
+          localStorage.ON_T_CI_index=i;
           break;
         }
       }
@@ -119,18 +123,17 @@ function load(lrcUrl, audioUrl) {
   fetch(lrcUrl)
     .then(response => response.text())
     .then(lrcText => {
-      localStorage.T_index = 0;
+      localStorage.ON_T_CI_index = 0;
       localStorage.ON_T_CI_L = 0;
       localStorage.ON_T_CI_S = 2000;
       let lrc = tojson(lrcText);
-      const updateLyrics = () => showLyrics(lrc, audio.currentTime);
      var AAa = document.getElementById('audio');
     var AAaa = AAa.cloneNode(true);
     AAa.parentNode.replaceChild(AAaa,AAa);
       const audio = document.getElementById('audio');
           audio.pause();
       audio.src = audioUrl;
-      audio.addEventListener('timeupdate', updateLyrics);
+      audio.addEventListener('timeupdate', () => showLyrics(lrc, audio.currentTime));
       audio.play();
     });
 }
@@ -169,13 +172,6 @@ fetch('https://files.ordylan.cn/HSP_OES/audios/GZ/list.json')
   })
   .catch(error => console.error('Error fetching JSON:', error));
   </script>
-<!--Test-->
-<hr>
-
-<iframe src="https://on.ordylan.cn/Tempsentence.php?1" id="testttting" style="width: 46%;height: 46%;border: none;-webkit-scrollbar {display: none;}"></iframe>
-<img src="https://onimagecloud.ordylan.cn/GKTimeImg.png?fromCloseGK.html" alt="GKimg" style="height:46%">
-<script>document.getElementById("testttting").src = 'https://on.ordylan.cn/Tempsentence.php?'+Number(new Date());
-<!--Test-->
 
 </div>
 </div></body></html>
