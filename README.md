@@ -1,4 +1,5 @@
 新版本测试见: https://ordylan.github.io/Js_LrcMusicPlayer/newtest.html  
+![image](https://github.com/ordylan/Js_LrcMusicPlayer/assets/56828391/f13f5dbb-6c9e-4bc8-a073-2a10a13eddf4)   
 # Js LrcMusicPlayer (english)
 A lrc audio subtitle player for web version.
 
