@@ -1,0 +1,181 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="https://on.ordylan.cn/1.css">
+<link rel="manifest" href="https://on.ordylan.cn/manifest.json">
+<title>橙鸭笔记系统V2_听音乐</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="theme-color" content="#E6E6E6">
+<link rel="shortcut icon" href="https://on.ordylan.cn/favicon.ico" type="image/vnd.microsoft.icon">
+<link rel="icon" href="https://on.ordylan.cn/favicon.ico" type="image/vnd.microsoft.icon">
+
+</head>
+<body>
+<div id="mmm">
+<header><div id="backurll"><a href="javascript:void(0);" onclick="window.location.href = localStorage.ON_LastPath;"><img src="https://on.ordylan.cn/back.png" id="b" alt="back"></a></div><h1 id="oes">听音乐_橙鸭笔记系统<a href="/noteview/tags/1">[回首页]</a></h1></header>
+
+<div id="main" style="display: block;">  <style>
+    .current-song {
+      background-color: gray;
+  text-shadow: 0 0 5px #ff801a,0 0 10px #ff801a,0 0 15px #ff801a,0 0 20px blue;
+  color:#ff801a;
+    }
+    
+    pre#lrcup1,pre#lrcdown1,pre#lrc,a#lrcup1,a#lrcdown1,a#lrc{
+    font-size: 4.3rem;color: black;  text-decoration:  none;
+}
+pre#lrcup1,pre#lrcdown1,a#lrcup1,a#lrcdown1{
+    color: grey;  
+}
+  </style>
+  <audio id="audio" controls loop></audio>
+  <pre id="lrcup1"></pre>
+  <pre id="lrc"></pre>
+  <pre id="lrcdown1"></pre>
+  <fieldset><legend>音乐表</legend>
+  <div id="playlist">
+  </div></fieldset>
+  <script>
+    var currentIndex = 0;
+  function playNextSong() {
+    const playlistItems = document.getElementsByClassName('playlist-item');
+    currentIndex = (currentIndex + 1) % playlistItems.length;
+    const nextSong = playlistItems[currentIndex];
+    nextSong.click();
+  }
+    function tojson(lrcText) {
+      const lines = lrcText.split('\n');
+      const lrc = [];
+      lrc.push({ time:"-1", text:">ORDYLAN<-正在载入中!!" });
+      for (let line of lines) {
+        const matchTime = line.match(/\[(\d{2}):(\d{2}\.\d{2})\](.+)/);
+        if (matchTime) {
+          const minutes = parseInt(matchTime[1]);
+          const seconds = parseFloat(matchTime[2]);
+          const text = matchTime[3];
+          lrc.push({ time: minutes * 60 + seconds, text });
+        }
+      }
+      var aaba = (lrc[(lrc.length-1)].time)+1;
+      lrc.push({ time:aaba,  text:">ORDYLAN<" });
+      return lrc;
+    }
+    function showLyrics(lrc, currentTime) {
+      const lrcElement = document.getElementById('lrc');
+      var ti = Number(localStorage.T_index) ;
+      if((ti+0)==lrc.length || currentTime >= (audio.duration-0.5)){
+          localStorage.T_index=0;
+      playNextSong();
+    }
+     if(currentTime>lrc[ti].time){
+         console.log("ti:"+ti);
+         console.log("currentTime:"+currentTime);
+         console.log("lrc.length:"+lrc.length);
+         console.log("lrc[ti].time:"+lrc[ti].time);
+         console.log("lrc[ti+1].time:"+lrc[ti+1].time);
+         console.log("延迟时间 :"+(currentTime-lrc[ti].time)*1000+"ms");
+              if((currentTime-lrc[ti].time)>localStorage.ON_T_CI_L){localStorage.ON_T_CI_L=(currentTime-lrc[ti].time);}
+if((currentTime-lrc[ti].time)<localStorage.ON_T_CI_S){localStorage.ON_T_CI_S=(currentTime-lrc[ti].time);}
+                  console.log("最长延迟时间 :"+localStorage.ON_T_CI_L+"ms");
+         console.log("最短延迟时间 :"+localStorage.ON_T_CI_S+"ms");
+
+         if(/*ti<(lrc.length-1) && */currentTime > lrc[ti+1].time){
+             
+console.log("拖动条或多页面-执行for");
+                  for (let i = 0; i < lrc.length; i++) {
+        if ((i === lrc.length - 1 && currentTime > lrc[i].time) || (currentTime > lrc[i].time && currentTime < lrc[i+1].time)) {
+          //lrcElement.innerHTML = lrc[i].text;
+          localStorage.T_index=i;
+          break;
+        }
+         }
+        //else if(Number(ti)==lrc.length){
+        //    lrcElement.innerHTML = lrc[ti].text;localStorage.T_index=0;
+         }
+        else{
+            lrcElement.innerHTML = lrc[ti].text;
+            document.getElementById('lrcup1').innerHTML = lrc[ti-1].text;
+            document.getElementById('lrcdown1').innerHTML = lrc[ti+1].text;
+        localStorage.T_index++;
+      }
+
+        }
+   /*  else if(currentTime=lrc[ti-1].time){
+         lrcElement.innerHTML = lrc[ti-1].text;
+  }*/
+      else if(currentTime<lrc[ti-1].time){console.log("拖动条或多页面-执行for");
+      for (let i = 0; i < lrc.length; i++) {
+        if ((i === lrc.length - 1 && currentTime > lrc[i].time) || (currentTime > lrc[i].time && currentTime < lrc[i+1].time)) {
+       //   lrcElement.innerHTML = lrc[i].text;
+          localStorage.T_index=i;
+          break;
+        }
+      }
+  }
+}
+
+function load(lrcUrl, audioUrl) {
+  fetch(lrcUrl)
+    .then(response => response.text())
+    .then(lrcText => {
+      localStorage.T_index = 0;
+      localStorage.ON_T_CI_L = 0;
+      localStorage.ON_T_CI_S = 2000;
+      let lrc = tojson(lrcText);
+      const updateLyrics = () => showLyrics(lrc, audio.currentTime);
+     var AAa = document.getElementById('audio');
+    var AAaa = AAa.cloneNode(true);
+    AAa.parentNode.replaceChild(AAaa,AAa);
+      const audio = document.getElementById('audio');
+          audio.pause();
+      audio.src = audioUrl;
+      audio.addEventListener('timeupdate', updateLyrics);
+      audio.play();
+    });
+}
+
+
+    function createPlaylistItem(title, lrc, audio) {
+      const playlist = document.getElementById('playlist');
+      const item = document.createElement('div');
+      item.classList.add('playlist-item');
+      item.innerText = title;
+      item.addEventListener('click', () => {
+        load(lrc, audio);
+        setActiveItem(item);
+        currentIndex = Array.from(playlistItems).indexOf(item);
+      });
+      playlist.appendChild(item);
+    }
+
+    function setActiveItem(item) {
+      const playlistItems = document.getElementsByClassName('playlist-item');
+      for (let i = 0; i < playlistItems.length; i++) {
+        playlistItems[i].classList.remove('current-song');
+      }
+      item.classList.add('current-song');
+    }
+fetch('https://files.ordylan.cn/HSP_OES/audios/GZ/list.json')
+  .then(response => response.json())
+  .then(data => {
+    for (let i = 0; i < data.length; i++) {
+      createPlaylistItem(
+        data[i].title,
+        data[i].lrc,
+        data[i].audio
+      );
+    }
+  })
+  .catch(error => console.error('Error fetching JSON:', error));
+  </script>
+<!--Test-->
+<hr>
+
+<iframe src="https://on.ordylan.cn/Tempsentence.php?1" id="testttting" style="width: 46%;height: 46%;border: none;-webkit-scrollbar {display: none;}"></iframe>
+<img src="https://onimagecloud.ordylan.cn/GKTimeImg.png?fromCloseGK.html" alt="GKimg" style="height:46%">
+<script>document.getElementById("testttting").src = 'https://on.ordylan.cn/Tempsentence.php?'+Number(new Date());
+<!--Test-->
+
+</div>
+</div></body></html>
