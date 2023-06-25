@@ -1,27 +1,22 @@
-
 <!DOCTYPE html>
 <html>
 <head>
 <link rel="stylesheet" type="text/css" href="https://on.ordylan.cn/1.css">
 <link rel="manifest" href="https://on.ordylan.cn/manifest.json">
-<title>橙鸭笔记系统V2_听音乐</title>
+<title>听音乐</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta name="theme-color" content="#E6E6E6">
 <link rel="shortcut icon" href="https://on.ordylan.cn/favicon.ico" type="image/vnd.microsoft.icon">
 <link rel="icon" href="https://on.ordylan.cn/favicon.ico" type="image/vnd.microsoft.icon">
-
 </head>
 <body>
-<div id="mmm">
-<header><div id="backurll"><a href="javascript:void(0);" onclick="window.location.href = localStorage.ON_LastPath;"><img src="https://on.ordylan.cn/back.png" id="b" alt="back"></a></div><h1 id="oes">听音乐_橙鸭笔记系统</h1></header>
-
+<header><div id="backurll"><a href="javascript:void(0);" onclick=""><img src="https://on.ordylan.cn/back.png" id="b" alt="back"></a></div><h1 id="oes">听音乐</h1></header>
 <div id="main" style="display: block;">  <style>
     .current-song {
       background-color: gray;
   text-shadow: 0 0 5px #ff801a,0 0 10px #ff801a,0 0 15px #ff801a,0 0 20px blue;
   color:#ff801a;
     }
-    
     pre#lrcup1,pre#lrcdown1,pre#lrc,a#lrcup1,a#lrcdown1,a#lrc{
     font-size: 4.3rem;color: black;  text-decoration:  none;
 }
@@ -33,9 +28,11 @@ pre#lrcup1,pre#lrcdown1,a#lrcup1,a#lrcdown1{
   <pre id="lrcup1"></pre>
   <pre id="lrc"></pre>
   <pre id="lrcdown1"></pre>
-  <fieldset><legend>音乐表</legend><div>[循环听歌: <input type="checkbox" id="loooop" onchange="if(document.getElementById('loooop').checked) {localStorage.ON_T_CI_loop='true';} else {localStorage.ON_T_CI_loop='false';}">]</div>
+  <fieldset><legend>音乐表</legend> <div>[循环听歌: <input type="checkbox" id="loooop" onchange="if(document.getElementById('loooop').checked) {localStorage.ON_T_CI_loop='true';} else {localStorage.ON_T_CI_loop='false';}">]</div>
   <div id="playlist">
   </div></fieldset>
+  
+  
   <script>
     var currentIndex = 0;
     if (localStorage.ON_T_CI_loop == 'true') {
@@ -49,9 +46,9 @@ pre#lrcup1,pre#lrcdown1,a#lrcup1,a#lrcdown1{
     nextSong.click();}
   }
     function tojson(lrcText) {
-      const lines = lrcText.split('\\n');
+      const lines = lrcText.split('\n');
       const lrc = [];
-      lrc.push({ time:"-1", text:">ORDYLAN<-正在载入中!!" });
+      lrc.push({ time:"-1", text:">ORDYLAN<-正在载入中[连播时可能失败]!" });
       for (let line of lines) {
         const matchTime = line.match(/\[(\d{2}):(\d{2}\.\d{2})\](.+)/);
         if (matchTime) {
@@ -73,7 +70,7 @@ pre#lrcup1,pre#lrcdown1,a#lrcup1,a#lrcdown1{
       playNextSong();
     }
      if(currentTime>lrc[ti].time){
-         console.log("ti:"+ti);
+        /* console.log("ti:"+ti);
          console.log("currentTime:"+currentTime);
          console.log("lrc.length:"+lrc.length);
          console.log("lrc[ti].time:"+lrc[ti].time);
@@ -83,7 +80,7 @@ pre#lrcup1,pre#lrcdown1,a#lrcup1,a#lrcdown1{
 if((currentTime-lrc[ti].time)<localStorage.ON_T_CI_S&&ti>1){localStorage.ON_T_CI_S=(currentTime-lrc[ti].time);}
                   console.log("最长延迟时间 :"+(localStorage.ON_T_CI_L)*1000+"ms");
          console.log("最短延迟时间 :"+(localStorage.ON_T_CI_S)*1000+"ms");
-
+*/
          if(/*ti<(lrc.length-1) && */currentTime > lrc[ti+1].time){
              
 console.log("拖动条或多页面-执行for");
