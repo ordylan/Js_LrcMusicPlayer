@@ -33,22 +33,25 @@ pre#lrcup1,pre#lrcdown1,a#lrcup1,a#lrcdown1{
   </div></fieldset>
   
   
-  <script>
+    <script>
+  localStorage.ON_T_CI_loopp=0;
     var currentIndex = 0;
     if (localStorage.ON_T_CI_loop == 'true') {
     document.getElementById('loooop').checked = true;
 }
   function playNextSong() {
-  if(localStorage.ON_T_CI_loop!="true"){
+  if(localStorage.ON_T_CI_loop!="true" /*&& localStorage.ON_T_CI_loopp!="b"*/){
+  localStorage.ON_T_CI_loopp++;
     const playlistItems = document.getElementsByClassName('playlist-item');
     currentIndex = (currentIndex + 1) % playlistItems.length;
     const nextSong = playlistItems[currentIndex];
-    nextSong.click();}
+    nextSong.click();
+  }
   }
     function tojson(lrcText) {
-      const lines = lrcText.split('\n');
+      const lines = lrcText.split('\\n');
       const lrc = [];
-      lrc.push({ time:"-1", text:">ORDYLAN<-正在载入中[连播时可能失败]!" });
+      lrc.push({ time:"-1", text:">ORDYLAN<-正在载入中!!" });
       for (let line of lines) {
         const matchTime = line.match(/\[(\d{2}):(\d{2}\.\d{2})\](.+)/);
         if (matchTime) {
@@ -66,8 +69,9 @@ pre#lrcup1,pre#lrcdown1,a#lrcup1,a#lrcdown1{
       const lrcElement = document.getElementById('lrc');
       var ti = Number(localStorage.ON_T_CI_index) ;
       if((ti+0)==lrc.length || currentTime >= (audio.duration-0.5)){
-          localStorage.ON_T_CI_index=0;
-      playNextSong();
+      if(Number(localStorage.ON_T_CI_loopp)<1){
+          localStorage.ON_T_CI_index=1;
+      playNextSong();}
     }
      if(currentTime>lrc[ti].time){
         /* console.log("ti:"+ti);
@@ -92,7 +96,7 @@ console.log("拖动条或多页面-执行for");
         }
          }
         //else if(Number(ti)==lrc.length){
-        //    lrcElement.innerHTML = lrc[ti].text;localStorage.ON_T_CI_index=0;
+        //    lrcElement.innerHTML = lrc[ti].text;localStorage.ON_T_CI_index=1;
          }
         else{
             lrcElement.innerHTML = lrc[ti].text;
@@ -120,7 +124,7 @@ function load(lrcUrl, audioUrl) {
   fetch(lrcUrl)
     .then(response => response.text())
     .then(lrcText => {
-      localStorage.ON_T_CI_index = 0;
+      localStorage.ON_T_CI_index = 1;
       localStorage.ON_T_CI_L = 0;
       localStorage.ON_T_CI_S = 2000;
       let lrc = tojson(lrcText);
@@ -132,6 +136,7 @@ function load(lrcUrl, audioUrl) {
       audio.src = audioUrl;
       audio.addEventListener('timeupdate', () => showLyrics(lrc, audio.currentTime));
       audio.play();
+     localStorage.ON_T_CI_loopp=0;
     });
 }
 
@@ -144,6 +149,7 @@ function load(lrcUrl, audioUrl) {
       item.addEventListener('click', () => {
         load(lrc, audio);
         setActiveItem(item);
+        const playlistItems = document.getElementsByClassName('playlist-item');
         currentIndex = Array.from(playlistItems).indexOf(item);
       });
       playlist.appendChild(item);
