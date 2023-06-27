@@ -17,6 +17,7 @@
   text-shadow: 0 0 5px #ff801a,0 0 10px #ff801a,0 0 15px #ff801a,0 0 20px blue;
   color:#ff801a;
     }
+    
     pre#lrcup1,pre#lrcdown1,pre#lrc,a#lrcup1,a#lrcdown1,a#lrc{
     font-size: 4.3rem;color: black;  text-decoration:  none;
 }
@@ -33,7 +34,7 @@ pre#lrcup1,pre#lrcdown1,a#lrcup1,a#lrcdown1{
   </div></fieldset>
   
   
-    <script>
+  <script>
   localStorage.ON_T_CI_loopp=0;
     var currentIndex = 0;
     if (localStorage.ON_T_CI_loop == 'true') {
@@ -49,7 +50,7 @@ pre#lrcup1,pre#lrcdown1,a#lrcup1,a#lrcdown1{
   }
   }
     function tojson(lrcText) {
-      const lines = lrcText.split('\\n');
+      const lines = lrcText.split('\n');
       const lrc = [];
       lrc.push({ time:"-1", text:">ORDYLAN<-正在载入中!!" });
       for (let line of lines) {
