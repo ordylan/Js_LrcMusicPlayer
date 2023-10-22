@@ -163,7 +163,7 @@ function load(lrcUrl, audioUrl) {
       }
       item.classList.add('current-song');
     }
-fetch('https://files.ordylan.cn/HSP_OES/audios/GZ/list.json')
+fetch('list.json')
   .then(response => response.json())
   .then(data => {
     for (let i = 0; i < data.length; i++) {
